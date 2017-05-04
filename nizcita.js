@@ -12,14 +12,10 @@ async function invoke(primary,alternate) {
       error: err,
       failureType: 'exception'
     })
-
-    this.flipped = checkpoint.bind(this)()
+    this.numberOfPrimaryFailures = this.numberOfPrimaryFailures + 1
+    this.flipped = this.shouldFlip(this.points,this.numberOfPrimaryFailures)
     return await alternate()
   }
-}
-
-function checkpoint() {
-  return this.shouldFlip(this.points)
 }
 
 function alternate(alternative){
@@ -33,7 +29,8 @@ function circuitbreaker(bufferSize,shouldFlip) {
     flipped: false,
     points: [],
     shouldFlip: shouldFlip,
-    invoke: invoke
+    invoke: invoke,
+    numberOfPrimaryFailures: 0
   }
 }
 
