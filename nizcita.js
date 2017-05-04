@@ -2,7 +2,6 @@ const buffer = require('./circular-buffer')
 
 async function invoke(primary,alternate) {
   if(this.flipped) {
-    console.log("flipped, invoking alternative")
     return await alternate()
   }
 
@@ -29,11 +28,10 @@ function alternate(alternative){
 }
 
 
-function circuitbreaker(bufferSize,numFailures,shouldFlip) {
+function circuitbreaker(bufferSize,shouldFlip) {
   return {
     flipped: false,
     points: [],
-    numFailures: numFailures,
     shouldFlip: shouldFlip,
     invoke: invoke
   }

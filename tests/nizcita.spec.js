@@ -6,7 +6,7 @@ const expect = chai.expect
 chai.use(chaiAsPromised)
 
 describe('When circuit-breaker is setup',()=>{
-  let cb = nz.circuitbreaker(1,1,(points)=>{
+  let cb = nz.circuitbreaker(1,(points)=>{
     return true
   })
   let primaryValue = 1

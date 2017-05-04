@@ -13,7 +13,7 @@ async function option2(value) {
 }
 
 
-let cb = nz.circuitbreaker(100,5,(points)=>{
+let cb = nz.circuitbreaker(100,(points)=>{
   console.log("should flip: ", points)
   return true
 })
