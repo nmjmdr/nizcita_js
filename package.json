@@ -19,5 +19,11 @@
   "bugs": {
     "url": "https://github.com/nmjmdr/nizcita_js/issues"
   },
-  "homepage": "https://github.com/nmjmdr/nizcita_js#readme"
+  "homepage": "https://github.com/nmjmdr/nizcita_js#readme",
+  "dependencies": {
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
+    "mocha": "^3.3.0",
+    "sinon": "^2.2.0"
+  }
 }
