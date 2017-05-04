@@ -1,0 +1,23 @@
+{
+  "name": "nizcita_js",
+  "version": "1.0.0",
+  "description": "A circuit-breaker library for async-await invocations",
+  "main": "nizcita.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nmjmdr/nizcita_js.git"
+  },
+  "keywords": [
+    "circuit-breaker",
+    "async-await"
+  ],
+  "author": "@nmjmdr",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nmjmdr/nizcita_js/issues"
+  },
+  "homepage": "https://github.com/nmjmdr/nizcita_js#readme"
+}
