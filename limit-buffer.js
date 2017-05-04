@@ -10,14 +10,19 @@ function create(bufferSize) {
       this.numberOfItems++
       this.numberOfItems = this.numberOfItems > this.bufferSize ? this.bufferSize : this.numberOfItems
     },
-    enumerator: function(){
+    getEnumerator: function(){
       return {
         index: this.counter,
         iteration: 0,
         scope: this,
         next: function(){
-          console.log(this)
-          return null
+          if(this.numberOfItems === 0 || this.iteration === this.scope.numberOfItems) {
+            return null
+          }
+          this.index--
+          this.index = this.index < 0 ? (this.scope.bufferSize-1) : this.index
+          this.iteration++
+          return this.scope.buf[this.index]
         }
       }
     }

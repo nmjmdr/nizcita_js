@@ -13,7 +13,7 @@ async function invoke(primary,alternate) {
       failureType: 'exception'
     })
     this.numberOfPrimaryFailures = this.numberOfPrimaryFailures + 1
-    this.flipped = this.shouldFlip(this.buf.get(),this.numberOfPrimaryFailures)
+    this.flipped = this.shouldFlip(this.buf.getEnumerator(),this.numberOfPrimaryFailures)
     return await alternate()
   }
 }
@@ -22,7 +22,6 @@ function alternate(alternative){
   this.alternative = alternative
   return this
 }
-
 
 function circuitbreaker(bufferSize,shouldFlip) {
   return {

@@ -20,7 +20,7 @@ describe('Using circuit-breaker',()=>{
 
   describe('When circuit-breaker is setup to flip after a failure',()=>{
     beforeEach(()=>{
-      cb = nz.circuitbreaker(1,(points,numberOfPrimaryFailures)=>{
+      cb = nz.circuitbreaker(1,(enumerator,numberOfPrimaryFailures)=>{
         return true
       })
     })
@@ -51,7 +51,7 @@ describe('Using circuit-breaker',()=>{
     let bufferSize = 10
     let numFailures = 20
     beforeEach(()=>{
-      cb = nz.circuitbreaker(bufferSize,(points,numberOfPrimaryFailures)=>{
+      cb = nz.circuitbreaker(bufferSize,(enumerator,numberOfPrimaryFailures)=>{
         return numberOfPrimaryFailures >= numFailures
       })
     })
