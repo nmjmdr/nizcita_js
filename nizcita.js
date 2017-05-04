@@ -1,4 +1,4 @@
-const cbuff = require('./circular-buffer')
+const cbuff = require('./limit-buffer')
 
 async function invoke(primary,alternate) {
   if(this.flipped) {
