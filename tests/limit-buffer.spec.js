@@ -5,9 +5,11 @@ const expect = chai.expect
 chai.use(chaiAsPromised)
 
 describe('Using circular-buffer',()=>{
-  let bufferSize = 10
-  let buf = lbuff.create(bufferSize)
-
+  const bufferSize = 10
+  let buf
+  beforeEach(()=>{
+    buf = lbuff.create(bufferSize)
+  })
   describe('When number of items equal to buffer size are added',()=>{
     it('Should store all the items added',()=>{
       for(let i=0;i<bufferSize;i++){
@@ -32,6 +34,46 @@ describe('Using circular-buffer',()=>{
         let value = enumerator.next()
         expect(value).to.equal(i)
       }
+    })
+  })
+
+  describe('When enumerator is obtained multiple times',()=>{
+    it('Should iterate the items successfully multiple times',()=>{
+      let delta = 3
+      for(let i=0;i<bufferSize+delta;i++){
+        buf.push(i)
+      }
+      let enumerator = buf.getEnumerator()
+      for(let i=bufferSize+delta-1;i>=delta;i--){
+        enumerator.next()
+      }
+
+      enumerator = buf.getEnumerator()
+      for(let i=bufferSize+delta-1;i>=delta;i--){
+        let value = enumerator.next()
+        expect(value).to.equal(i)
+      }
+    })
+  })
+
+  describe('When number of items less than the buffer size are added',()=>{
+    it('Should store only the number of items that are added',()=>{
+      let delta = 3
+      for(let i=0;i<bufferSize-delta;i++){
+        buf.push(i)
+      }
+      let enumerator = buf.getEnumerator()
+      for(let i=bufferSize-delta-1;i>=0;i--){
+        let value = enumerator.next()
+        expect(value).to.equal(i)
+      }
+    })
+  })
+
+  describe('When no items are added to buffer',()=>{
+    it('Should return null when next is invoked',()=>{
+      let enumerator = buf.getEnumerator()
+      expect(enumerator.next()).to.be.not.ok
     })
   })
 })
