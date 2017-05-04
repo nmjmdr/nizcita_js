@@ -1,4 +1,4 @@
-const buffer = require('./circular-buffer')
+const cbuff = require('./circular-buffer')
 
 async function invoke(primary,alternate) {
   if(this.flipped) {
@@ -8,12 +8,12 @@ async function invoke(primary,alternate) {
   try {
     return await primary()
   } catch (err) {
-    this.points.push({
+    this.buf.push({
       error: err,
       failureType: 'exception'
     })
     this.numberOfPrimaryFailures = this.numberOfPrimaryFailures + 1
-    this.flipped = this.shouldFlip(this.points,this.numberOfPrimaryFailures)
+    this.flipped = this.shouldFlip(this.buf.get(),this.numberOfPrimaryFailures)
     return await alternate()
   }
 }
@@ -27,7 +27,7 @@ function alternate(alternative){
 function circuitbreaker(bufferSize,shouldFlip) {
   return {
     flipped: false,
-    points: [],
+    buf: cbuff.create(bufferSize),
     shouldFlip: shouldFlip,
     invoke: invoke,
     numberOfPrimaryFailures: 0
