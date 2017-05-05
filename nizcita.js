@@ -1,10 +1,12 @@
 const cbuff = require('./limit-buffer')
+const _probePolicy = require('./probe-policies')
 
 async function invoke(primary,alternate) {
-  if(this.flipped) {
+  if(this.flipped && !this.shouldProbe(this.whileFlipped)) {
     onInvokeAlternate.bind(this)
     return await alternate()
   }
+
   onInvokePrimary.bind(this)()
   try {
     return await primary()
@@ -14,13 +16,13 @@ async function invoke(primary,alternate) {
   }
 }
 
-function setShouldProbe(shouldProbe) {
+function probePolicy(shouldProbe) {
   this.shouldProbe = shouldProbe
   return this
 }
 
 function onInvokeAlternate() {
-  this.numberOfCallsWhileFlipped++
+  this.whileFlipped.calls++
 }
 
 function onInvokePrimary() {
@@ -34,6 +36,13 @@ function onPrimaryError(err) {
   })
   this.numberOfPrimaryFailures = this.numberOfPrimaryFailures + 1
   this.flipped = this.shouldFlip(this.buf.getEnumerator(),this.numberOfPrimaryFailures)
+  if(this.flipped) {
+    onFlipped.bind(this)()
+  }
+}
+
+function onFlipped() {
+  this.whileFlipped.flippedAt = Date.now()
 }
 
 function alternate(alternative){
@@ -48,11 +57,12 @@ function circuitbreaker(bufferSize,shouldFlip) {
     shouldFlip: shouldFlip,
     invoke: invoke,
     numberOfPrimaryFailures: 0,
-    numberOfCallsWhileFlipped: 0,
-    shouldProbe: () => {
-      return true
+    whileFlipped : {
+      calls: 0,
+      flippedAt: null
     },
-    setShouldProbe: setShouldProbe,
+    shouldProbe: () => _probePolicy.never,
+    probePolicy: probePolicy,
   }
 }
 
