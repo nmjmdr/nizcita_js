@@ -75,7 +75,7 @@ describe('Using circuit-breaker',()=>{
   })
 
   describe('When circuit-breaker is setup to probe',()=>{
-    let probeAfterCalls = 1
+    let probeAfterCalls = 10
     before(()=>{
       cb = nz.circuitbreaker(1,(enumerator,numberOfPrimaryFailures)=>{
         return true
@@ -101,10 +101,12 @@ describe('Using circuit-breaker',()=>{
       let result = await cb.invoke(primary,secondary)
 
       expect(result).to.equal(secondaryValue)
-      result = await cb.invoke(primary,secondary)
+      for(i=0;i<probeAfterCalls;i++) {
+        result = await cb.invoke(primary,secondary)
+      }
       expect(result).to.equal(primaryValue)
       expect(callsToPrimary).to.equal(2)
-      expect(callsToSecondary).to.equal(1)
+      expect(callsToSecondary).to.equal(probeAfterCalls)
     })
   })
 })
