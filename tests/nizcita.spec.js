@@ -74,7 +74,7 @@ describe('Using circuit-breaker',()=>{
     })
   })
 
-  describe('When circuit-breaker is setup to probe',()=>{
+  describe('When circuit-breaker is setup to probe after n alternate calls',()=>{
     let probeAfterCalls = 10
     before(()=>{
       cb = nz.circuitbreaker(1,(enumerator,numberOfPrimaryFailures)=>{
