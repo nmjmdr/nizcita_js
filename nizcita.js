@@ -3,17 +3,26 @@ const _probePolicy = require('./probe-policies')
 
 async function invoke(primary,alternate) {
   if(this.flipped && !this.shouldProbe(this.whileFlipped)) {
-    onInvokeAlternate.bind(this)
-    return await alternate()
+    return await invokeAlternate.bind(this)(alternate)
   }
 
-  onInvokePrimary.bind(this)()
+
   try {
-    return await primary()
+    return await invokePrimary.bind(this)(primary)
   } catch (err) {
     onPrimaryError.bind(this)(err)
-    return await alternate()
+    return await invokeAlternate.bind(this)(alternate)
   }
+}
+
+async function invokeAlternate(alternate) {
+  onInvokeAlternate.bind(this)()
+  return await alternate()
+}
+
+async function invokePrimary(primary) {
+  onInvokePrimary.bind(this)()
+  return await primary()
 }
 
 function probePolicy(shouldProbe) {
@@ -26,7 +35,7 @@ function onInvokeAlternate() {
 }
 
 function onInvokePrimary() {
-  this.numberOfCallsWhileFlipped = 0
+  this.whileFlipped.calls = 0
 }
 
 function onPrimaryError(err) {

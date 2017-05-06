@@ -1,4 +1,4 @@
-function random() {
+function coinToss() {
   return Math.random() > 0.5? true : false
 }
 
@@ -18,8 +18,13 @@ function afterTime(deltaTicks) {
   }
 }
 
+function randomProbability(p) {
+  return Math.random() < p? true : false
+}
+
 module.exports = {
-  random: random,
+  coinToss: coinToss,
+  randomProbability: randomProbability,
   never: never,
   afterNFailures: afterNFailures,
   afterTime: afterTime

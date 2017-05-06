@@ -73,4 +73,38 @@ describe('Using circuit-breaker',()=>{
       })
     })
   })
+
+  describe('When circuit-breaker is setup to probe',()=>{
+    let probeAfterCalls = 1
+    before(()=>{
+      cb = nz.circuitbreaker(1,(enumerator,numberOfPrimaryFailures)=>{
+        return true
+      }).probePolicy((flippedStats)=>{
+        return flippedStats.calls >= probeAfterCalls
+      })
+    })
+    it('Should probe after configured number of calls to alternate',async ()=>{
+      let callsToSecondary = 0
+      let callsToPrimary = 0
+      let primary = async ()=>{
+        callsToPrimary++
+        if(callsToPrimary == 1) {
+          throw new Error("error")
+        } else {
+          return Promise.resolve(primaryValue)
+        }
+      }
+      let secondary = async ()=>{
+        callsToSecondary++
+        return Promise.resolve(secondaryValue)
+      }
+      let result = await cb.invoke(primary,secondary)
+
+      expect(result).to.equal(secondaryValue)
+      result = await cb.invoke(primary,secondary)
+      expect(result).to.equal(primaryValue)
+      expect(callsToPrimary).to.equal(2)
+      expect(callsToSecondary).to.equal(1)
+    })
+  })
 })
