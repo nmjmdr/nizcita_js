@@ -1,6 +1,7 @@
 const chai = require('chai')
 const chaiAsPromised = require('chai-as-promised')
 const nz = require('../nizcita')
+const sinon = require('sinon')
 const expect = chai.expect
 chai.use(chaiAsPromised)
 
@@ -61,6 +62,7 @@ describe('Using circuit-breaker',()=>{
           await cb.invoke(errorPrimary,secondary)
         }
         expect(cb.flipped).to.be.true
+
       })
     })
 
@@ -107,6 +109,47 @@ describe('Using circuit-breaker',()=>{
       expect(result).to.equal(primaryValue)
       expect(callsToPrimary).to.equal(2)
       expect(callsToSecondary).to.equal(probeAfterCalls)
+    })
+  })
+
+  describe('When circuit-breaker is setup to flip primary call takes longer than expected',()=>{
+    let timeLimit = 2 * 1e6
+    let timeToTake = 3 * 1e6
+    let gotFailures = null
+    let clock = null
+    beforeEach(()=>{
+      clock = sinon.useFakeTimers()
+      cb = nz.circuitbreaker(1,(failures)=>{
+        gotFailures = failures
+        return true
+      }).setTimeLimit(timeLimit)
+    })
+    afterEach(()=>{
+      clock.restore()
+    })
+
+    describe('When primary invocation takes more time that limit set',()=>{
+      before(()=>{
+        timeTakingFunction = ()=>{
+          return new Promise((resolve,reject)=>{
+            setTimeout(()=>{
+              resolve()
+            },timeToTake)
+            clock.tick(timeToTake)
+          })
+        }
+
+        primary = async ()=>{
+          return await timeTakingFunction()
+        }
+      })
+
+      describe('After primary is invoked',()=>{
+        it('Should set the switch as flipped',async ()=>{
+          let result = await cb.invoke(primary,secondary)
+          expect(cb.flipped).to.be.true
+        })
+      })
     })
   })
 })
