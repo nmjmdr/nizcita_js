@@ -17,7 +17,7 @@ describe('Using circular-buffer',()=>{
       }
       let enumerator = buf.getEnumerator()
       for(let i=bufferSize-1;i>=0;i--){
-        let value = enumerator.next()
+        let value = enumerator.get()
         expect(value).to.equal(i)
       }
     })
@@ -31,7 +31,7 @@ describe('Using circular-buffer',()=>{
       }
       let enumerator = buf.getEnumerator()
       for(let i=bufferSize+delta-1;i>=delta;i--){
-        let value = enumerator.next()
+        let value = enumerator.get()
         expect(value).to.equal(i)
       }
     })
@@ -45,12 +45,12 @@ describe('Using circular-buffer',()=>{
       }
       let enumerator = buf.getEnumerator()
       for(let i=bufferSize+delta-1;i>=delta;i--){
-        enumerator.next()
+        enumerator.get()
       }
 
       enumerator = buf.getEnumerator()
       for(let i=bufferSize+delta-1;i>=delta;i--){
-        let value = enumerator.next()
+        let value = enumerator.get()
         expect(value).to.equal(i)
       }
     })
@@ -64,16 +64,16 @@ describe('Using circular-buffer',()=>{
       }
       let enumerator = buf.getEnumerator()
       for(let i=bufferSize-delta-1;i>=0;i--){
-        let value = enumerator.next()
+        let value = enumerator.get()
         expect(value).to.equal(i)
       }
     })
   })
 
   describe('When no items are added to buffer',()=>{
-    it('Should return null when next is invoked',()=>{
+    it('Should return null when get is invoked',()=>{
       let enumerator = buf.getEnumerator()
-      expect(enumerator.next()).to.be.not.ok
+      expect(enumerator.get()).to.be.not.ok
     })
   })
 })

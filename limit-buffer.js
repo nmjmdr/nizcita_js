@@ -15,7 +15,7 @@ function create(bufferSize) {
         index: this.counter,
         iteration: 0,
         scope: this,
-        next: function(){
+        get: function(){
           if(this.numberOfItems === 0 || this.iteration === this.scope.numberOfItems) {
             return null
           }

@@ -12,12 +12,15 @@ async function option2(value) {
   return Promise.resolve("option2: ok")
 }
 
-
-let cb = nz.circuitbreaker(100,(failures)=>{
-  console.log("should flip")
-  return true
+const limitFailuresTo = 5
+const timeLimit = 2 * 1e6
+let cb = nz.circuitbreaker(100,(failuresInfo)=>{
+  return failuresInfo.continousFailureCount > limitFailuresTo
 })
-
+.setTimeLimit(timeLimit)
+.shouldProbe((flippedStats)=>{
+  return (Date.now() - flippedStats.flippedAt) > 5
+})
 
 async function main() {
   let i = 3
@@ -25,11 +28,9 @@ async function main() {
   let primary = async function(){
     return await option1(i)
   }
-
   let alternate = async function(){
     return await option2(i)
   }
-
   let result = await cb.invoke(primary,alternate)
   console.log(result)
 
