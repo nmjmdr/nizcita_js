@@ -21,7 +21,9 @@ async function invokeAlternate(alternate) {
 
 async function invokePrimary(primary) {
   onInvokePrimary.bind(this)()
-  return await primary()
+  let result = await primary()
+  this.failures.continousFailureCount = 0
+  return result
 }
 
 function probePolicy(shouldProbe) {
@@ -43,8 +45,6 @@ function onPrimaryError(err) {
     failureType: 'exception',
     failedAt: Date.now(),
   })
-  // TO DO: change to idea of continous failures count -->
-  // reset to counter: continousFailureCount
   this.failures.continousFailureCount = this.failures.continousFailureCount + 1
   this.flipped = this.shouldFlip(this.failures)
   if(this.flipped) {
