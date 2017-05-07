@@ -20,7 +20,7 @@ describe('Using circuit-breaker',()=>{
 
   describe('When circuit-breaker is setup to flip after a failure',()=>{
     beforeEach(()=>{
-      cb = nz.circuitbreaker(1,(enumerator,numberOfPrimaryFailures)=>{
+      cb = nz.circuitbreaker(1,(failures)=>{
         return true
       })
     })
@@ -51,8 +51,8 @@ describe('Using circuit-breaker',()=>{
     let bufferSize = 10
     let numFailures = 20
     beforeEach(()=>{
-      cb = nz.circuitbreaker(bufferSize,(enumerator,numberOfPrimaryFailures)=>{
-        return numberOfPrimaryFailures >= numFailures
+      cb = nz.circuitbreaker(bufferSize,(failures)=>{
+        return failures.continousFailureCount >= numFailures
       })
     })
     describe('When primary errors out for "n" invocations',()=>{
@@ -77,7 +77,7 @@ describe('Using circuit-breaker',()=>{
   describe('When circuit-breaker is setup to probe after n alternate calls',()=>{
     let probeAfterCalls = 10
     before(()=>{
-      cb = nz.circuitbreaker(1,(enumerator,numberOfPrimaryFailures)=>{
+      cb = nz.circuitbreaker(1,(failures)=>{
         return true
       }).probePolicy((flippedStats)=>{
         return flippedStats.calls >= probeAfterCalls

@@ -13,7 +13,7 @@ async function option2(value) {
 }
 
 
-let cb = nz.circuitbreaker(100,(enumerator,numberOfPrimaryFailures)=>{
+let cb = nz.circuitbreaker(100,(failures)=>{
   console.log("should flip")
   return true
 })

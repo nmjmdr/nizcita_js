@@ -1,11 +1,10 @@
-const cbuff = require('./limit-buffer')
+const cbuff = require('./limit-buffer.js')
 const _probePolicy = require('./probe-policies')
 
 async function invoke(primary,alternate) {
   if(this.flipped && !this.shouldProbe(this.whileFlipped)) {
     return await invokeAlternate.bind(this)(alternate)
   }
-
 
   try {
     return await invokePrimary.bind(this)(primary)
@@ -39,12 +38,15 @@ function onInvokePrimary() {
 }
 
 function onPrimaryError(err) {
-  this.buf.push({
+  this.failures.latestfailures.push({
     error: err,
-    failureType: 'exception'
+    failureType: 'exception',
+    failedAt: Date.now(),
   })
-  this.numberOfPrimaryFailures = this.numberOfPrimaryFailures + 1
-  this.flipped = this.shouldFlip(this.buf.getEnumerator(),this.numberOfPrimaryFailures)
+  // TO DO: change to idea of continous failures count -->
+  // reset to counter
+  this.failures.continousFailureCount = this.failures.continousFailureCount + 1
+  this.flipped = this.shouldFlip(this.failures)
   if(this.flipped) {
     onFlipped.bind(this)()
   }
@@ -59,13 +61,15 @@ function alternate(alternative){
   return this
 }
 
-function circuitbreaker(bufferSize,shouldFlip) {
+function circuitbreaker(bufferSz,shouldFlip) {
   return {
     flipped: false,
-    buf: cbuff.create(bufferSize),
     shouldFlip: shouldFlip,
     invoke: invoke,
-    numberOfPrimaryFailures: 0,
+    failures: {
+      continousFailureCount: 0,
+      latestfailures: cbuff.create(bufferSz)
+    },
     whileFlipped : {
       calls: 0,
       flippedAt: null
