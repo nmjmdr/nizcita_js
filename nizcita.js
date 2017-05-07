@@ -44,7 +44,7 @@ function onPrimaryError(err) {
     failedAt: Date.now(),
   })
   // TO DO: change to idea of continous failures count -->
-  // reset to counter
+  // reset to counter: continousFailureCount
   this.failures.continousFailureCount = this.failures.continousFailureCount + 1
   this.flipped = this.shouldFlip(this.failures)
   if(this.flipped) {
