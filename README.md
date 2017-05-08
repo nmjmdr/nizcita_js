@@ -93,3 +93,5 @@ async function getOption() {
   console.log(result)
 }
 ```
+
+Nizcita in [Sanskrit](http://spokensanskrit.de/index.php?tinput=nizcita) is _decision_
