@@ -8,13 +8,14 @@ The library is simple and provides flexibility to clients to decide the followin
 
 ##### To acheive aspect 1, nizcita:
 
-* Maintains the information about _"n" latest failures_. The information is maintained in a limited circular buffer and can be enumerated by the client.
+* Maintains the information about _"n" latest failures_. The information is maintained in a limited circular buffer and can be enumerated by the client. 
 
 * When setting up the circuit breaker, the client supplies a function. Nizcita invokes this function, when the primary invocation fails to determine if the circuit needs to be flipped to use the alternative invocation.
 
 ```javascript
-let numFailures = 5
-let cb = nz.circuitbreaker(bufferSize,(failuresInfo)=>{
+const numFailures = 5
+const holdNLatestFailures = 10
+let cb = nz.circuitbreaker(holdNLatestFailures,(failuresInfo)=>{
         return failuresInfo.continousFailureCount >= numFailures
       })
 ```
