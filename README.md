@@ -40,9 +40,10 @@ A failure can be of two types: _an exception_ or a _time limit exceeded_. The cl
 
 The time limit can be set in the following manner:
 ```javascript
-let numFailures = 5
-let timeLimit = 2 * 1e6 // time limit is specified in nanoseconds
-let cb = nz.circuitbreaker(bufferSize,(failuresInfo)=>{
+const numFailures = 5
+const timeLimit = 2 * 1e6 // time limit is specified in nanoseconds
+const holdNLatestFailures = 10
+let cb = nz.circuitbreaker(holdNLatestFailures,(failuresInfo)=>{
         return failuresInfo.continousFailureCount >= numFailures
       })
       .setTimeLimit(timeLimit)
