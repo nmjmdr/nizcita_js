@@ -49,10 +49,10 @@ describe('Using circuit-breaker',()=>{
   })
 
   describe('When circuit-breaker is set to flip after "n" failures',()=>{
-    let bufferSize = 10
-    let numFailures = 20
+    let numberOfLatestFailures = 10
+    let numFailures = 5
     beforeEach(()=>{
-      cb = nz.circuitbreaker(bufferSize,(failures)=>{
+      cb = nz.circuitbreaker(numberOfLatestFailures,(failures)=>{
         return failures.continousFailureCount >= numFailures
       })
     })

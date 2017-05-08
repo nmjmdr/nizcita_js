@@ -83,7 +83,7 @@ function setTimeLimit(timeLimit) {
   return this
 }
 
-function circuitbreaker(bufferSz,shouldFlip) {
+function circuitbreaker(numberOfLatestFailures,shouldFlip) {
   return {
     flipped: false,
     shouldFlip: shouldFlip,
@@ -92,7 +92,7 @@ function circuitbreaker(bufferSz,shouldFlip) {
     setTimeLimit: setTimeLimit,
     failures: {
       continousFailureCount: 0,
-      latestfailures: cbuff.create(bufferSz)
+      latestfailures: cbuff.create(numberOfLatestFailures)
     },
     whileFlipped : {
       calls: 0,
