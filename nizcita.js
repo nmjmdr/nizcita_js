@@ -102,7 +102,6 @@ function circuitbreaker(numberOfLatestFailures,shouldFlip) {
     probePolicy: probePolicy,
   }
 }
-12323
 
 module.exports = {
   circuitbreaker: circuitbreaker
