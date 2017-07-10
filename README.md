@@ -8,7 +8,7 @@ The library is simple and provides flexibility to clients to decide the followin
 
 ##### To acheive aspect 1, nizcita:
 
-* Maintains the information about _"n" latest failures_. The information is maintained in a limited circular buffer and can be enumerated by the client. 
+* Maintains the information about _"n" latest failures_. The information is maintained in a limited circular buffer and can be enumerated by the client.
 
 * When setting up the circuit breaker, the client supplies a function. Nizcita invokes this function, when the primary invocation fails to determine if the circuit needs to be flipped to use the alternative invocation.
 
@@ -67,7 +67,7 @@ let cb = nz.circuitbreaker(1,(failures)=>{
 ```
 In the above code the client indicates that the probe should be done after "x" number of calls have been made to the "alternate".
 
-The library comes with a few standard set of probe policies including: coin-flip and probablity-based
+The library comes with a few standard set of probe policies including: coin-flip and probablity-based policy
 
 An example setup and use:
 
