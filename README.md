@@ -96,4 +96,4 @@ async function getOption() {
 }
 ```
 
-Nizcita in [Sanskrit](http://spokensanskrit.de/index.php?tinput=nizcita) is _decision_
+Nizcita means _decision or to decide_ in [Sanskrit](http://spokensanskrit.de/index.php?tinput=nizcita)
